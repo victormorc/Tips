@@ -1,0 +1,357 @@
+###################################################################################################
+###################################################################################################
+# PROJECT: -                                                                                      #
+# BRIEF:   Notes related to C++                                                                   #
+# AUTHOR:  -                                                                                      #
+# DATE:    01/03/2023                                                                             #
+# VERSION: 1.0                                                                                    #
+###################################################################################################
+
+- Avoid the use of pointers as parameters in functions. Instead use references. In the case of use of raw pointers check they do not point to nullptr (NULL).
+- Avoid the use of raw pointer. Instead of them use, when possible and logic, smart pointers (unique_ptr, shared_ptr, weak_ptr).
+- Do not use NULL or 0 for raw pointer. Use nullptr!
+- Do not use "magic numbers". Use constexpr with a comprehensible name.
+- Avoid the use of defines, instead use constexpr with the appropriate type for the value. This will notify some errors during compilation.
+- Do not use macros, use constexpr functions or templates functions.
+- Do not introduce a variable (named object) until you have a suitable value for it.
+- Use C++ cast, not C cast. Make explicit cast, implicit cast can lead to undesired effects.
+- Use namespaces, they let to use the same name for different objects.
+- Use noexcept when exiting a function because of a throw is impossible or unacceptable.
+- Put noexcept on every function written completely in C or in any other language without exceptions
+- 'constexpr' functions have some restrictions:
+	virtual functions can't be constexpr.
+	its return type must be a 'literal type" (e.g., no objects with non-trival ctors or dtors).
+	all of its parameters must be literal types (for member functions, class should be a literal type, too).
+	the function body can't contain a try block.
+	it can't contain a variable definition of a non-literal type, or anything with static or thread storage duration.
+- 'constexpr' function are inline and they should be defined in header file.
+- 'constexpr' data members must have a definition in the '.cpp' (constexpr uint32_t CLASS::MEMBER_CLASS;)
+- Declare all your functions as override (explicitly) when they do!
+- Use of alias declaration instead of typedefs.
+	using functionPointer = void (*)(void);		// Equivalent to: typedef void (*functionPointer)(void)
+- Delete functions should be public and preferable to private functions without being implemented.
+- Any function may be deleted, including non-member functions and template instantiations.
+- Any object declare in a namespace must be define too.
+
+- Classes with private constructors can’t be used as base classes, nor can they be embedded inside other objects.
+
+- Shy away (keep distance) from inline functions with static data.
+
+- An object that’s static in a class is, for all intents and purposes, always constructed (and destructed),
+even if it’s never used. In contrast, an object that’s static in a function is created the first time through
+the function, so if the function is never called, the object is never created.
+
+- One of the philosophical pillars on which C++ was built is the idea that you shouldn’t pay for things you don’t use,
+and defining an object like our printer as a static object in a function is one way of adhering to this philosophy.
+
+- TEMPLATES MUST BE DEFINED IN ".HPP".
+
+- C-Style enums are unscoped enums. C++ style enums are scoped (enum class Color).
+	enum Color{blue, white, red};
+	int white = 0;		// ERROR!
+	
+	enum class Color {blue, white, red};
+	int white = 0;		// OK!
+
+- Overload operators:
+	- Prefix operator,++i is sometimes faster than, and is never slower than, i++.
+	- Prefix and postfix operators ++ and --.
+		class Number {
+		public:
+		  Number& operator++ ();    // prefix ++
+		  Number  operator++ (int); // postfix ++, dummy parameter 
+		};
+		
+	-  .(dot)  ::  ?:  sizeof	-> Operators than it is not possible to overload.
+	
+- Is the type of “pointer-to-member-function” different from “pointer-to-function”? Yes!!
+	Class X {
+		public:
+		void f(void);
+	};
+	
+	void call_back(void function(void));
+	
+	X x;	// X object.	
+	call_back(x.f)	// Error!!! your are passing X*:: 
+	https://isocpp.org/wiki/faq/pointers-to-members
+	
+- Member function returning a reference:
+	class DigInto
+	{
+	private:
+		int secret;
+	public:
+		DigInto() { secret = 150; }
+		int &GetSecretVariable() { return secret; }
+		void Write() { std::cout << secret << std::endl; }
+	};
+
+	int main()
+	{
+	  DigInto dinto;
+	  dinto.GetSecretVariable() = 10;	// You are assigning a value to the reference
+	  dinto.Write();	// This will print 10
+
+	  return 0;
+	}
+
+- When is copy constructor called?
+In C++, a Copy Constructor may be called in following cases:
+1. When an object of the class is returned by value.
+2. When an object of the class is passed (to a function) by value as an argument.
+3. When an object is constructed based on another object of the same class.
+4. When the compiler generates a temporary object.
+
+- We need to define our own copy constructor only if an object has pointers or any runtime allocation of the resource like file handle, a network connection..etc.
+
+It’s simplest to think of an r-value as “everything that is not an l-value”. This notably includes literals (e.g. 5), temporary values (e.g. x+1),
+ and anonymous objects (e.g. Fraction(5, 2)). 
+r-values are typically evaluated for their values, have expression scope (they die at the end of the expression they are in), 
+and cannot be assigned to. This non-assignment rule makes sense, 
+because assigning a value applies a side-effect to the object. Since r-values have expression scope, if we were to assign a value to an r-value,
+ then the r-value would either go out of scope 
+before we had a chance to use the assigned value in the next expression (which makes the assignment useless) or we’d have to use a
+ variable with a side effect applied more than once in an 
+expression (which by now you should know causes undefined behavior!).
+
+Move assignmet and move constructor: https://www.learncpp.com/cpp-tutorial/15-3-move-constructors-and-move-assignment/
+
+When building C++, the linker says my constructors, destructors or virtual tables are undefined, but I defined them
+	The ISO C++ Standard specifies that all virtual methods of a class that are not pure-virtual must be defined, 
+	but does not require any diagnostic for violations of this rule [class.virtual]/8. 
+	Based on this assumption, GCC will only emit the implicitly defined constructors, the assignment operator, the destructor 
+	and the virtual table of a class in the translation unit that defines
+	its first such non-inline method.
+	Therefore, if you fail to define this particular method, the linker may complain about the lack of definitions for apparently 
+	unrelated symbols. Unfortunately, in order to improve this error message, it might be necessary to change the linker, and this can't always be done.
+	The solution is to ensure that all virtual methods that are not pure are defined. 
+	Note that a destructor must be defined even if it is declared pure-virtual
+
+/****************************************************************************************/
+int* - pointer to int
+int const * - pointer to const int
+int * const - const pointer to int
+int const * const - const pointer to const int
+Now the first const can be on either side of the type so:
+const int * == int const *
+const int * const == int const * const
+
+HOW TO READ VARIABLES AND COMPLEX C - http://c-faq.com/decl/spiral.anderson.html
+
+/****************************************************************************************/
+struct A {
+virtual void f() { }
+};
+struct B : public A { };
+struct C { };
+
+void f () {
+A a;
+B b;
+
+A* ap = &b;
+B* b1 = dynamic_cast<B*> (&a);  // NULL, because 'a' is not a 'B'
+B* b2 = dynamic_cast<B*> (ap);  // 'b'
+C* c = dynamic_cast<C*> (ap);   // NULL.
+
+A& ar = dynamic_cast<A&> (*ap); // Ok.
+B& br = dynamic_cast<B&> (*ap); // Ok.
+C& cr = dynamic_cast<C&> (*ap); // std::bad_cast
+}
+
+- To check if an object is a implementation of a class, we can use dynamic_cast() or typeid().
+
+/****************************************************************************************/
+sizeof single struct member in C
+
+typedef struct _parent
+{
+  float calc ;
+  char text[255] ;
+  int used ;
+} parent_t ;
+
+sizeof(((parent_t){0}).text)
+sizeof(((parent_t *)0).text)
+
+/****************************************************************************************/
+- Clean buffer for serial port.
+	ioctl(fd, TCFLSH, TCIFLUSH | TCOFLUSH | TCIOFLUSH);
+	tcflush (fd, TCIFLUSH | TCOFLUSH | TCIOFLUSH);
+	
+/****************************************************************************************/
+- Execute a command and get the response.
+
+    FILE *fp;							/**< Pipe where read output from command */
+    const char *command = "md5sum ";	/**< Command to execute in a shell */
+    char md5_calculated[33] = {};		/**< Response from OS to command */
+    std::string _command(command);		/**< Command to execute, with file to operate over it */
+    _command += std::string(Path_MMS + fileName);
+
+	/** Setup the pipe for reading and execute the command. */
+    fp = popen(_command.c_str(), "r");
+
+    /** Read output from command. */
+    fscanf(fp, "%s", md5_calculated);   /**< Only gets MD5 of file */
+
+    /** Close pipe */
+    fclose(fp);
+	
+/****************************************************************************************/
+- Find in directory the expected file.
+
+	DIR* directory;
+    struct dirent* file;
+    string file_name;
+
+    if ((directory = opendir(Path_File))) {
+        while ((file = readdir(directory))) {
+            file_name = file->d_name;
+            if ((file_name.compare(".") != 0) && (file_name.compare("..") != 0))
+                /** File found */
+        }
+
+
+/****************************************************************************************/
+/*******************************************************************************
+ * @function __UNUSED__
+ * @brief Function used to avoid warnings for unused variable.
+ * @param[in] variable - Variable which is not used.
+ * @return None.
+ * @note This function uses a template for the parameter.
+ ******************************************************************************/
+template <class T>
+constexpr inline void __UNUSED__(T variable)
+{
+  static_cast<void>(variable);
+}
+
+
+/****************************************************************************************/
+* It is safe to 'delete' a NULL pointer.
+  
+  delete p;  // Right
+  -------------------
+  if (p != NULL) {   // No need
+    delete p;
+  }
+
+* Never should delete an object twice, undefined behaviour will occur.
+
+* The result of deleting a pointer that didn’t come from the new operator is undefined.
+
+/****************************************************************************************/
+* Try to use always 'initialization list'{} instead of 'assignment'. It's cheaper and faster.
+
+
+/****************************************************************************************/
+Matrix(const Matrix&);              // copy constructor
+Matrix& operator=(const Matrix&);   // copy assignment
+
+Matrix(Matrix&&);                   // move constructor
+Matrix& operator=(Matrix&&);        // move assignment
+
+/****************************************************************************************/
+- For C:
+
+(Unnamed enum) -> Are use as macro to define a label. They do not use store space.
+enum {MAX_BUFFER_SIZE = 10};        // This is a constant expression of type int.
+
+
+// Enums are of type integer according to the standard. They have different size,
+// depending on the values of the elements.
+
+enum enum_test1{ MAX_TEST1, MAX_CONST_EXPR = 10};           // 4 bytes
+enum enum_test2{ MAX_TEST2, MAX_64_BYTES = 0xFFFFFFFFFF};   // 8 bytes.
+
+
+- For C++:
+
+enum Enum1;                     // Illegal in C++03 and C++11; no size is explicitly specified.
+enum Enum2 : unsigned int;      // Legal in C++11.
+enum class Enum3;               // Legal in C++11, because enum class declarations have a default type of "int".
+enum class Enum4: unsigned int; // Legal C++11.
+enum Enum2 : unsigned short;    // Illegal in C++11, because Enum2 was previously declared with a different type.
+
+/****************************************************************************************/
+
+class Ptr {
+
+public:
+	Y& operator*() { return *p; } // *Ptr (indirection operator)
+	Y* operator&() { return p; } // &Ptr (address-of operator)
+	Y* operator−>() { return p; } // Ptr->p (member of pointer operator
+	Y* operator->*() { return p; } // (pointer to member of pointer)
+	Y& operator[](int i) { return p[i]; } // dereference to access element
+	
+	operator Y() { return *p; }  // Cast operator to Y
+
+private:
+	Y* p;
+};
+
+
+/********************************************** C *************************************************/
+In the absence of explicit initialization, external and static variables are guaranteed to be
+initialized to zero; automatic and register variables have undefined (i.e., garbage) initial values.
+
+External and static variables may be initialized when they are defined. The initializer must be a
+constant expression. The initialization is done once, conceptionally before the program begins execution.
+A constant expression is an expression that involves only constants. Such expressions may be evaluated at
+during compilation rather than run-time, and accordingly may be used in any place that a constant can occur.
+
+A constant object in C is not a constant expression. It has external linkage.
+
+/********************************************* C++ ************************************************/
+A constant object in C++ is a constant expression and it has internal linkage. It is possible to use it
+to initialize another object.
+
+
+/********************************************* C++ ************************************************/
+When should virtual functions be public, protected, or private? The short answer is: Rarely if ever, sometimes, and by default, respectively
+
+* Guideline #1: Prefer to make interfaces nonvirtual, using Template Method (actually, it is the Non-Virtual Interface Idiom).
+* Guideline #2: Prefer to make virtual functions private.
+* Guideline #3: Only if derived classes need to invoke the base implementation of a virtual function, make the virtual function protected.
+
+For the special case of the destructor only:
+* Guideline #4: A base class destructor should be either public and virtual, or protected and nonvirtual.
+
+
+/********************************************* C++ ************************************************/
+/****************************************** TEMPLATES *********************************************/
+	- Template compilation is a two-phase process:
+		* First phase, the compiler examines the template for syntax errors ignoring template parameters or dependent code.
+		* In second phase, the code is checked again but this time with the template types.
+	- Template must be defined in a header file.
+	- Templates do not perform conversions to infer template parameters (argument deduction).
+	- A template is instantiated (at compile time) only if:
+		* it is invoked.
+		* its address is taken.
+		* it is specialized.
+		* it is explicitly instantiated.
+	- If a template is not instantiated will not be part of the executable (no object code will be generated).
+	
+	- Non-Type template parameter:
+	template<int value>
+	void Print() {
+		std::cout << value << '\n';
+	}
+	
+	- Non-Type template parameters can only be of integral type and must be a constant expression.
+	
+	/******************************* EXPLICIT SPECIALIZATION *******************************/
+	template<> void F(<type>)
+	
+	- The specialization is not a template and must be treated like a normal function/class.
+	- The specialization always begins with empty template parameter list.
+	- The specialization of a function must not be defined in a header file. It should be declared in the header file.
+	- Specialization never is taken into account for overloading.
+	
+	
+	/******************************* EXPLICIT INSTANTIATION *******************************/
+	template type Function <type>(type)
+	template type Function<>(type)
+	template type Function(type)
+	
