@@ -1,0 +1,36 @@
+###################################################################################################
+###################################################################################################
+# PROJECT: -                                                                                      #
+# BRIEF:   Notes related to vim use                                                               #
+# AUTHOR:  -                                                                                      #
+# DATE:    24/11/2022                                                                             #
+# VERSION: 1.0                                                                                    #
+###################################################################################################
+
+* SET TAB:
+    :set tabstop=4
+    :set shiftwidth=4
+    :set expandtab
+    
+    (tabstop  means how long each tabstop will be. You can replace 4 with whatever number you desire.
+    shiftwidth governs indentation, making sure that when you type >> or <<, the line will be shifted
+    according to the # of spaces you set. To avoid confusion, I would set both tabstop and shiftwidth
+    to the same number. Lastly,  expandtabwill ensure that when you hit the tab key it will use the
+    # of spaces you set in tabstop.)
+    
+* SET NUMBER LINE:
+    :set number
+
+* REMOVE NUMBER LINE:
+    :set nonumber
+
+* HIGHLIGHT ALL SEARCH MATCHES:
+    :set hlsearch
+	
+* BINARY MODE:
+	:set binary
+	$ vim -b <name_file>
+	
+* BINARY MODE REPRESENTATION:
+	:%!xxd
+	:%!xxd -r 		-> Revert the representation.
