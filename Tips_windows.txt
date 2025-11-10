@@ -1,0 +1,19 @@
+###################################################################################################
+###################################################################################################
+# PROJECT: -                                                                                      #
+# BRIEF:   Notes related to windows commands                                                      #
+# AUTHOR:  -                                                                                      #
+# DATE:    03/03/2023                                                                             #
+# VERSION: 1.0                                                                                    #
+###################################################################################################
+
+	- Creation of an alias in the cmd
+	$ set Python37="C:\Program Files\ANSYS Inc\v221\SCADE\contrib\Python37\python.exe"
+	
+	- Call an alias
+	$ %alias_name%
+	
+	- Inspect dependencies for an executable file:
+	$ objdump -p <binary.exe> | grep -i "dll"
+	
+	$strings <binary.exe> | grep -i "dll"
