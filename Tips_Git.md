@@ -1,10 +1,10 @@
-###################################################################################################
-# PROJECT: -                                                                                      #
-# BRIEF:   Notes related to Git commands                                                          #
-# AUTHOR:  Victor Moreno Calvo                                                                    #
-# DATE:    24/03/2018                                                                             #
-# VERSION: 1.0                                                                                    #
-###################################################################################################
+---
+project: "-"
+brief: Notes related to Git commands
+author: Victor Moreno Calvo
+date: 24-03-2018
+version: 1.0
+---
 
 # BASIC GIT COMMANDS:
 
@@ -14,15 +14,15 @@
 
 ## INFO BRANCH:
 - Get local branches, which branch is tracking and last commit and its message.
-	$ git branch -vvv (v for verbose).
+	$ git branch -vvv #v for verbose.
 
 - Show local and remote branches.
-	$ git branch -a (a for all).	// Remote branches should be displayed as remotes/origin/<name_branch>
+	$ git branch -a #a for all.	# Remote branches should be displayed as remotes/origin/<name_branch>
 
 ## SHOW:
 - Show modified files in commit
 	$ git show --name-only <commit_sha_1>
-	$ git show HEAD (shows modified files in latest commit).
+	$ git show HEAD #shows modified files in latest commit.
 
 - Show file from a different branch without change to it.
 	$ git show <branch_name>:<path_to_file>
@@ -43,19 +43,19 @@
 	$ git submodule update --init --recursive
 
 - Pull the latest commit in remote of a branch, overwrite local files (discarding local files and commits).
-	$ git fetch		(downloads the latest from remote)
+	$ git fetch		#downloads the latest from remote
 	$ git reset --hard origin/<branch_name>
 
 ## UNDO:
 - Delete unstaged changes for a working file:
 	$ git checkout -- <file_name>
-	$ git checkout -- .			(Delete recursively all unstaged changes in versioned files)
+	$ git checkout -- .			#Delete recursively all unstaged changes in versioned files
 
 - Untrack a file, already tracked in git.
 	$ git rm --cached <file_name>
 
-- Undo a merge, already commited:
-	$ git revert <commit_sha> -m 1	(revert last commit)
+-Undo a merge, already commited:
+	$ git revert <commit_sha> -m 1	#revert last commit
 
 - Undo a commit, already push into remote.
 	$ git revert <commit_sha>
@@ -67,13 +67,16 @@
 	$ git reset --hard HEAD~1
 
 - I committed the deletion and then I did more commits:
-	$ git checkout <commit hash> -- <file_name>  (Last commit which still had the file).
+	$ git checkout <commit hash> -- <file_name>  #Last commit which still had the file.
 	$ git checkout <deletion commit hash>~1 -- <file_name>
 
 - I deleted a file, commited and pushed:
 	$ git checkout HEAD^ <file_name>
 	$ git commit --amend
 	$ git push -f
+    
+- Update/add changes in last commit without creating a new one
+    $ git commit --amend --no-edit      # Option --no-edit avoid to launch the vi console to edit the commit message
 
 ## RESET VS REVERT:
 - Git reset should generally be considered a 'local' undo method. 
@@ -166,10 +169,10 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 	$ git checkout <sha1_commit> <path_to_file>
 
 - Checkout remote branch and bring it to local repository.
-	$ git checkout -t <name_remote>/<name_branch>	                # $git checkout -t origin/BRANCH-44_TESTING)
+	$ git checkout -t <name_remote>/<name_branch>	                # $git checkout -t origin/BRANCH-44_TESTING
 
 - Set up a local branch with a different name than the remote branch.
-	$ git checkout -b <local_branch> -t <name_remote>/<name_branch>  # $git checkout -t BLACK_BOX_TESTING origin/BRANCH-44_TESTING)
+	$ git checkout -b <local_branch> -t <name_remote>/<name_branch>  # $git checkout -t BLACK_BOX_TESTING origin/BRANCH-44_TESTING
 
 - "Merge" specific files from another branch:
 	$ git checkout <source_branch> -- <path_to_file>
@@ -180,7 +183,7 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 
 ## TRACK BRANCH:
 - Make local branch to track remote branch:
-	$ git branch -u <name_remote>/<name_branch>		# ($ git branch -u NAME_LOCAL_BRANCH origin/NAME_REMOTE_BRANCH
+	$ git branch -u <name_remote>/<name_branch>		# $ git branch -u NAME_LOCAL_BRANCH origin/NAME_REMOTE_BRANCH
 
 ## INIT REPOSITORY:
 - Create a repository.
@@ -196,7 +199,7 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 
 - Show specific tag:
 	$ git show <tag_name>
-	$ git show -l "tag_name_1_0*"	                # Show all tags which start with tag_name_1_0
+	$ git show -l "tag_name_1_0"	                # Show all tags which start with tag_name_1_0
 
 - Push tag into remote:
 	$ git push <remote_name> <tag_name>
@@ -243,9 +246,6 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 - Show files changed in a commit.
     $ git log --raw
 
-- Pull of all the remote branches.
-    $ git branch -r | grep -v "HEAD" | sed "s/origin\///" | xargs -I {} git checkout -b {} origin/{}
-
 - Delete remote branch.
     $ git push <remote_name> -d <branch_name>		# git push origin -d FEATURE_NEW_APP
     
@@ -253,7 +253,7 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
     $ git commit --allow-empty -m "Message"
     
 - Make a symbolic name for a branch.
-    $ git symbolic-ref refs/heads/FEAT_X refs/heads/PROJ_FEATURE_X   (In this case the real branch is called PROJ_FEATURE_X, however you can use FEAT_X to refer to it).
+    $ git symbolic-ref refs/heads/FEAT_X refs/heads/PROJ_FEATURE_X   #In this case the real branch is called PROJ_FEATURE_X, however you can use FEAT_X to refer to it.
 
 - Identify files which are currently being tracked:
     $ git ls-tree -r <branch_name> --name-only
@@ -275,6 +275,9 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
     
 - Show tags in remote:
     $ git ls-remote --tags <remote>		# $git tag -> lists all local tags.
+    
+- Search for a commit with a string in the current branch :
+    $ git log --grep="string"           # If you want to search in all the branches use the --all option
 	
 ## CONFIGURE:
 * https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#Formatting-and-Whitespace
@@ -296,8 +299,6 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 - Show configuration
     $ git config --list
 
-- See file in a different branch without changing branches
-	$ git show <branch_name>:<path_file>
 
 
 
