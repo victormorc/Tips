@@ -84,6 +84,10 @@ version: 1.0
     $ od -x <binary_file>
 
 ## openssl
+- Show asn1 der format of file:
+    $ openssl asn1parse -inform DER -in <file.der>
+    $ openssl asn1parse -in <file.pem>
+
 - Show content of an x509 certificate <cert.der>/<cert.pem>:
     $ openssl x509 -inform DER -in <cert.der> -text -noout
     $ openssl x509 -in <cert.pem> -text -noout
@@ -96,6 +100,9 @@ version: 1.0
 
 - Extract public key from the cryptographic pair <private_key.key>:
     $ openssl pkey -in <private_key.key> -pubout > <public_key.pem>     # Operation is done upon pem files.
+
+- Sign file using a key:
+    $ openssl dgst -sha256 -sign <private_key.key> -out <file_signed> <file_to_sign>       # Data are digest first using sha256
 
 ## patch
 - Apply patch created by diff:
@@ -151,3 +158,6 @@ version: 1.0
 ## xxd
 - Print hexadecimal format of file:
     $ xxd <binary_file>
+
+- Copy hexadecimal string to a file:
+    $ echo "string_hex" | xxd -r -p > <hex_file>        # -r (reverse) -> conversion from hex to binary, -p (plain) -> no new line, ...
