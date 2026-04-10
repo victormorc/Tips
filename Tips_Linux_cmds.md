@@ -157,7 +157,10 @@ version: 1.0
 
 ## xxd
 - Print hexadecimal format of file:
-    $ xxd <binary_file>
+    $ xxd <file>
+    
+- Print hexadecimal file all together:
+    $ xxd -p <file>
 
 - Copy hexadecimal string to a file:
     $ echo "string_hex" | xxd -r -p > <hex_file>        # -r (reverse) -> conversion from hex to binary, -p (plain) -> no new line, ...
