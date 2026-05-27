@@ -111,6 +111,12 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 
 - Save unstaged changes into stash with a message:
 	$ git stash save -- "Message"
+    
+- Create a backup of the current work (staged and unstaged) without changing the working DIRECTORY
+    $ git stash store $(git stash create) -m "Message"
+    
+- Produce a reference (sha-1) of the current work (staged, unstaged).
+    $git stash create
 
 ## LOG:
 - Show history changes of a file. Display the full diff of each commit.
@@ -243,8 +249,8 @@ https://es.atlassian.com/git/tutorials/saving-changes/git-stash
 - Show commit which modified a specific file.
     $ git log -- <path_file>
 
-- Show files changed in a commit.
-    $ git log --raw
+- Show files changed in a commit without commit id, author, ...
+    $ git log --raw --pretty=format:"" --name-only <commit_hash>
 
 - Delete remote branch.
     $ git push <remote_name> -d <branch_name>		# git push origin -d FEATURE_NEW_APP
