@@ -8,6 +8,13 @@ version: 1.0
 
 # BASIC LINUX COMMANDS:
 
+## dd
+- Create a file filled with 0s <bytes>.
+    $ dd if=/dev/zero of=<file_name> bs=1 count=<bytes>
+
+- Copy <origin> file into <destination> file, starting at <offset> (bytes):
+    $ dd if=<origin> of=<destination> bs=1 seek=<offset> conv=notrunc
+
 ## diff
 - Compare two plain text files:
     $ diff <old_file> <new_file>
@@ -103,11 +110,21 @@ version: 1.0
 
 - Sign file using a key:
     $ openssl dgst -sha256 -sign <private_key.key> -out <file_signed> <file_to_sign>       # Data are digest first using sha256
+    
+- Verify der signature using a public and original file:
+    $ openssl pkeyutl -verify -pubin -inkey <public_key.key> -rawin -digest sha256 -sigfile <ecdsa.der> -in <file>
 
 ## patch
 - Apply patch created by diff:
     $ patch <original_file> < <patch_file>
     $ patch < <patch_file>.patch
+
+## readelf
+- How to get the symbols from a kind of '.elf' file:
+    $ readelf -s <elf_file>
+    
+- How to get the sections from an '.elf' kind of file:
+    $ readelf -S <elf_file>
 
 ## tar
 - Compress a folder into an archive:
@@ -160,7 +177,7 @@ version: 1.0
     $ xxd <file>
     
 - Print hexadecimal file all together:
-    $ xxd -p <file>
+    $ xxd -p -c0 <file>     # -p (plain) , -c0 set the number of columns to 0.
 
 - Copy hexadecimal string to a file:
     $ echo "string_hex" | xxd -r -p > <hex_file>        # -r (reverse) -> conversion from hex to binary, -p (plain) -> no new line, ...
